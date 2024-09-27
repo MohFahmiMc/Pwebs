@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* Gaya umum untuk body */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('background.jpg'); /* Ganti dengan URL gambar yang diinginkan */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Kontainer login */
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="password">Enter Password:</label>
+            <input type="text" id="password" name="password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p id="error-message" class="error"></p>
+    </div>
+
+    <script>
+        // Peta password dan URL tujuan
+        const passwordRedirectMap = {
+            'wlink': 'https://mohfahmimc.github.io/Link/',
+            'razz23ooors32': 'https://razoo32.github.io/RazzWebsite/',
+            'password3': 'https://example3.com',
+            'password4': 'https://example4.com',
+            'password5': 'https://example5.com',
+            'password6': 'https://example6.com',
+            'password7': 'https://example7.com',
+            'password8': 'https://example8.com',
+            'password9': 'https://example9.com',
+            'password10': 'https://example10.com'
+        };
+
+        // Menangani submit form
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman form default
+
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (passwordRedirectMap[password]) {
+                // Jika password benar, arahkan ke URL yang sesuai
+                window.location.href = passwordRedirectMap[password];
+            } else {
+                // Jika password salah, tampilkan pesan error
+                errorMessage.textContent = 'Password salah. Coba lagi.';
+            }
+        });
+    </script>
+</body>
+</html>

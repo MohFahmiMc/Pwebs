@@ -3,115 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login with Visible Password and Help</title>
     <style>
-        /* Gaya umum untuk body */
+        /* Background animation */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background-image: url('background.jpg'); /* Ganti dengan URL gambar yang diinginkan */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background: linear-gradient(270deg, #ff7e5f, #feb47b, #86e3ce, #d4a5a5);
+            background-size: 800% 800%;
+            animation: gradientAnimation 15s ease infinite;
         }
 
-        /* Kontainer login */
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.9);
+        h1 {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
             width: 100%;
-            text-align: center;
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
         }
 
         input {
-            width: 100%;
-            padding: 10px;
             margin: 10px 0;
+            padding: 10px;
+            width: 100%;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 5px;
+            font-size: 1rem;
         }
 
         button {
-            width: 100%;
             padding: 10px;
-            background-color: #007BFF;
-            border: none;
+            width: 100%;
+            background-color: #ff7e5f;
             color: white;
-            border-radius: 4px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #feb47b;
         }
 
-        .error {
-            color: red;
-            margin-top: 10px;
+        #leaderboard {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+            font-size: 1.2rem;
+        }
+
+        #help {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        #help h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        #help p {
+            font-size: 1rem;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <h2>daftar pw populer</h2>
-        <h2>-----------------</h2>
-        <h2>"ceknama"</h2>
-        <h2>"wlink"</h2>
-        <h2>"tebak2an"</h2>
-        <h2>"rahasia"</h2>
+    <div>
+        <h1>Welcome to the Login Portal</h1>
+
         <form id="loginForm">
-            <label for="password">Enter Password:</label>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <!-- Mengubah input password dari 'password' ke 'text' agar password terlihat -->
+            <label for="password">Password:</label>
             <input type="text" id="password" name="password" required>
-            <button type="submit" class="btn">Login</button>
+
+            <button type="submit">Login</button>
         </form>
-        <p id="error-message" class="error"></p>
+
+        <div id="leaderboard" style="display:none;">
+            <h2>Top Passwords (Used >10 Times)</h2>
+            <ul id="passwordLeaderboard"></ul>
+        </div>
+
+        <!-- Help Section -->
+        <div id="help">
+            <h2>How to Use This Website</h2>
+            <p>1. Enter your <strong>username</strong> in the first field.</p>
+            <p>2. Enter the <strong>password</strong> that corresponds to the website you want to visit.</p>
+            <p>3. If the password is correct, you will be redirected to the corresponding website automatically.</p>
+            <p>4. The leaderboard will show passwords that have been used more than 10 times.</p>
+            <p>5. Your password will now be visible as you type!</p>
+        </div>
     </div>
 
     <script>
-        // Peta password dan URL tujuan
-        const passwordRedirectMap = {
-            'wlink': 'https://mohfahmimc.github.io/Link/',
-            'razz23ooors32': 'https://razoo32.github.io/RazzWebsite/',
-            'password3': 'https://example3.com',
-            'password4': 'https://example4.com',
-            'password5': 'https://example5.com',
-            'password6': 'https://example6.com',
-            'password7': 'https://example7.com',
-            'rahasia': 'https://mohfahmimc.github.io/Sheeh/',
-            'tebak2an': 'https://mohfahmimc.github.io/Tebak-tebakan/',
-            'ceknama': 'https://mohfahmimc.github.io/Ceknama/'
+        // Predefined passwords and corresponding websites
+        const passwordsToWebsites = {
+            "ceknama": "https://mohfahmimc.github.io/Ceknama/",
+            "miweb": "https://mohfahmimc.github.io/Link/",
+            "tebak2an": "https://mohfahmimc.github.io/Tebak-tebakan/",
+            "rahasia": "https://mohfahmimc.github.io/Sheeh/",
+            "razz23ooors32": "https://razoo32.github.io/RazzWebsite/",
+            "football": "https://website6.com",
+            "welcome": "https://website7.com",
+            "monkey": "https://website8.com",
+            "admin": "https://website9.com",
+            "passw0rd": "https://website10.com",
+            "iloveyou": "https://website11.com",
+            "trustno1": "https://website12.com",
+            "sunshine": "https://website13.com",
+            "master": "https://website14.com",
+            "hello": "https://website15.com",
+            "freedom": "https://website16.com",
+            "whatever": "https://website17.com",
+            "shadow": "https://website18.com",
+            "123qwe": "https://website19.com",
+            "superman": "https://website20.com"
         };
 
-        // Menangani submit form
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah pengiriman form default
+        // Track password usage
+        let passwordUsage = {};
 
+        // Initialize password usage count to 0
+        Object.keys(passwordsToWebsites).forEach(password => passwordUsage[password] = 0);
+
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
 
-            if (passwordRedirectMap[password]) {
-                // Jika password benar, arahkan ke URL yang sesuai
-                window.location.href = passwordRedirectMap[password];
+            if (passwordsToWebsites.hasOwnProperty(password)) {
+                alert(`Welcome ${username}! Redirecting to your destination...`);
+                passwordUsage[password]++;
+                updateLeaderboard();
+                
+                // Redirect to the corresponding website
+                window.location.href = passwordsToWebsites[password];
             } else {
-                // Jika password salah, tampilkan pesan error
-                errorMessage.textContent = 'Password salah. Coba lagi.';
+                alert('Incorrect password!');
             }
         });
+
+        // Update leaderboard
+        function updateLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            const leaderboardList = document.getElementById('passwordLeaderboard');
+            leaderboardList.innerHTML = '';
+
+            // Filter passwords that have been used more than 10 times
+            const filteredPasswords = Object.keys(passwordUsage)
+                .filter(password => passwordUsage[password] >= 10)
+                .sort((a, b) => passwordUsage[b] - passwordUsage[a]);
+
+            if (filteredPasswords.length > 0) {
+                leaderboard.style.display = 'block';
+                filteredPasswords.forEach(password => {
+                    const li = document.createElement('li');
+                    li.textContent = `${password}: ${passwordUsage[password]} times`;
+                    leaderboardList.appendChild(li);
+                });
+            } else {
+                leaderboard.style.display = 'none';
+            }
+        }
     </script>
 </body>
+    </html>
+            </body>
 </html>

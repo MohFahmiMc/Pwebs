@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login with Visible Password and Help</title>
+    <title>Persistent Login with Leaderboard</title>
     <style>
         /* Background animation */
         @keyframes gradientAnimation {
@@ -122,14 +122,13 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             
-            <!-- Mengubah input password dari 'password' ke 'text' agar password terlihat -->
             <label for="password">Password:</label>
             <input type="text" id="password" name="password" required>
 
             <button type="submit">Login</button>
         </form>
 
-        <div id="leaderboard" style="display:none;">
+        <div id="leaderboard">
             <h2>Top Passwords (Used >10 Times)</h2>
             <ul id="passwordLeaderboard"></ul>
         </div>
@@ -149,10 +148,10 @@
         // Predefined passwords and corresponding websites
         const passwordsToWebsites = {
             "ceknama": "https://mohfahmimc.github.io/Ceknama/",
-            "miweb": "https://mohfahmimc.github.io/Link/",
             "tebak2an": "https://mohfahmimc.github.io/Tebak-tebakan/",
             "rahasia": "https://mohfahmimc.github.io/Sheeh/",
-            "razz23ooors32": "https://razoo32.github.io/RazzWebsite/",
+            "miweb": "https://mohfahmimc.github.io/Link/",
+            "abc123": "https://website5.com",
             "football": "https://website6.com",
             "welcome": "https://website7.com",
             "monkey": "https://website8.com",
@@ -170,11 +169,15 @@
             "superman": "https://website20.com"
         };
 
-        // Track password usage
-        let passwordUsage = {};
+        // Load password usage from Local Storage or initialize to an empty object
+        let passwordUsage = JSON.parse(localStorage.getItem('passwordUsage')) || {};
 
-        // Initialize password usage count to 0
-        Object.keys(passwordsToWebsites).forEach(password => passwordUsage[password] = 0);
+        // Initialize password usage count to 0 for new passwords
+        Object.keys(passwordsToWebsites).forEach(password => {
+            if (!(password in passwordUsage)) {
+                passwordUsage[password] = 0;
+            }
+        });
 
         // Handle login
         document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -186,8 +189,9 @@
             if (passwordsToWebsites.hasOwnProperty(password)) {
                 alert(`Welcome ${username}! Redirecting to your destination...`);
                 passwordUsage[password]++;
+                localStorage.setItem('passwordUsage', JSON.stringify(passwordUsage));
                 updateLeaderboard();
-                
+
                 // Redirect to the corresponding website
                 window.location.href = passwordsToWebsites[password];
             } else {
@@ -197,7 +201,6 @@
 
         // Update leaderboard
         function updateLeaderboard() {
-            const leaderboard = document.getElementById('leaderboard');
             const leaderboardList = document.getElementById('passwordLeaderboard');
             leaderboardList.innerHTML = '';
 
@@ -207,18 +210,17 @@
                 .sort((a, b) => passwordUsage[b] - passwordUsage[a]);
 
             if (filteredPasswords.length > 0) {
-                leaderboard.style.display = 'block';
                 filteredPasswords.forEach(password => {
                     const li = document.createElement('li');
                     li.textContent = `${password}: ${passwordUsage[password]} times`;
                     leaderboardList.appendChild(li);
                 });
-            } else {
-                leaderboard.style.display = 'none';
             }
         }
+
+        // Initialize leaderboard on page load
+        updateLeaderboard();
     </script>
 </body>
-    </html>
-            </body>
-</html>
+            </html>
+    

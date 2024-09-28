@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persistent Login with Leaderboard</title>
+    <title>Website Registration and Login</title>
     <style>
         /* Background animation */
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -21,22 +15,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(270deg, #ff7e5f, #feb47b, #86e3ce, #d4a5a5);
-            background-size: 800% 800%;
-            animation: gradientAnimation 15s ease infinite;
+            background: url('https://www.w3schools.com/w3images/mountains.jpg') no-repeat center center fixed;
+            background-size: cover;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         h1 {
             font-size: 2.5rem;
             color: white;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
             animation: fadeIn 2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
 
         form {
@@ -46,6 +40,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             max-width: 400px;
             width: 100%;
+            margin: auto;
         }
 
         input {
@@ -112,64 +107,65 @@
             font-size: 1rem;
             text-align: left;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div>
-        <h1>Welcome to the Login Portal</h1>
+        <h1>Website Management Portal</h1>
 
-        <form id="loginForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <label for="password">Password:</label>
-            <input type="text" id="password" name="password" required>
+        <!-- Login Section -->
+        <div id="loginSection">
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Password:</label>
+                <input type="text" id="password" name="password" required>
 
-            <button type="submit">Login</button>
-        </form>
+                <button type="submit">Login</button>
+            </form>
+        </div>
 
+        <!-- Add Website Section -->
+        <div id="addWebsiteSection" class="hidden">
+            <h2>Add a Website</h2>
+            <form id="addWebsiteForm">
+                <label for="newUsername">Username:</label>
+                <input type="text" id="newUsername" required>
+                <label for="newPassword">New Password:</label>
+                <input type="text" id="newPassword" required>
+                <label for="newWebsite">Website Link:</label>
+                <input type="url" id="newWebsite" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Leaderboard Section -->
         <div id="leaderboard">
-            <h2>Top Passwords (Used >2 Times)</h2>
+            <h2>Top Passwords (Used >10 Times)</h2>
             <ul id="passwordLeaderboard"></ul>
         </div>
 
         <!-- Help Section -->
         <div id="help">
             <h2>How to Use This Website</h2>
-            <p>1. Enter your <strong>username</strong> in the first field.</p>
-            <p>2. Enter the <strong>password</strong> that corresponds to the website you want to visit.</p>
-            <p>3. If the password is correct, you will be redirected to the corresponding website automatically.</p>
-            <p>4. The leaderboard will show passwords that have been used more than 2 times.</p>
-            <p>5. Your password will now be visible as you type!</p>
+            <p>1. Use the <strong>Login</strong> section to access your account.</p>
+            <p>2. Use the <strong>Add a Website</strong> section to submit a new password and website.</p>
+            <p>3. Check the <strong>Leaderboard</strong> to see the most used passwords.</p>
         </div>
+
+        <button id="toggleAddWebsite">Switch to Add Website</button>
     </div>
 
     <script>
-        // Predefined passwords and corresponding websites
-        const passwordsToWebsites = {
-            "ceknama": "https://mohfahmimc.github.io/Ceknama/",
-            "tebak2an": "https://mohfahmimc.github.io/Tebak-tebakan/",
-            "rahasia": "https://mohfahmimc.github.io/Sheeh/",
-            "miweb": "https://mohfahmimc.github.io/Link/",
-            "abc123": "https://website5.com",
-            "football": "https://website6.com",
-            "welcome": "https://website7.com",
-            "monkey": "https://website8.com",
-            "admin": "https://website9.com",
-            "passw0rd": "https://website10.com",
-            "iloveyou": "https://website11.com",
-            "trustno1": "https://website12.com",
-            "sunshine": "https://website13.com",
-            "master": "https://website14.com",
-            "hello": "https://website15.com",
-            "freedom": "https://website16.com",
-            "whatever": "https://website17.com",
-            "shadow": "https://website18.com",
-            "123qwe": "https://website19.com",
-            "superman": "https://website20.com"
-        };
+        // Load saved passwords and websites from Local Storage
+        const passwordsToWebsites = JSON.parse(localStorage.getItem('passwordsToWebsites')) || {};
 
-        // Load password usage from Local Storage or initialize to an empty object
+        // Load password usage from Local Storage
         let passwordUsage = JSON.parse(localStorage.getItem('passwordUsage')) || {};
 
         // Initialize password usage count to 0 for new passwords
@@ -190,7 +186,6 @@
                 alert(`Welcome ${username}! Redirecting to your destination...`);
                 passwordUsage[password]++;
                 localStorage.setItem('passwordUsage', JSON.stringify(passwordUsage));
-                updateLeaderboard();
 
                 // Redirect to the corresponding website
                 window.location.href = passwordsToWebsites[password];
@@ -199,14 +194,29 @@
             }
         });
 
+        // Handle adding a new website
+        document.getElementById('addWebsiteForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const newWebsite = document.getElementById('newWebsite').value;
+
+            // Add the new password and website
+            passwordsToWebsites[newPassword] = newWebsite; 
+            localStorage.setItem('passwordsToWebsites', JSON.stringify(passwordsToWebsites));
+            alert('Website added successfully.');
+            document.getElementById('addWebsiteForm').reset();
+            updateLeaderboard();
+        });
+
         // Update leaderboard
         function updateLeaderboard() {
             const leaderboardList = document.getElementById('passwordLeaderboard');
             leaderboardList.innerHTML = '';
 
-            // Filter passwords that have been used more than 2 times
+            // Filter passwords that have been used more than 10 times
             const filteredPasswords = Object.keys(passwordUsage)
-                .filter(password => passwordUsage[password] > 2) // Update to use > 2
+                .filter(password => passwordUsage[password] > 10)
                 .sort((a, b) => passwordUsage[b] - passwordUsage[a]);
 
             if (filteredPasswords.length > 0) {
@@ -216,16 +226,30 @@
                     leaderboardList.appendChild(li);
                 });
             } else {
-                // Tampilkan pesan jika tidak ada password yang digunakan lebih dari 2 kali
                 const li = document.createElement('li');
-                li.textContent = "No passwords used more than 2 times yet.";
+                li.textContent = "No passwords used more than 10 times yet.";
                 leaderboardList.appendChild(li);
             }
         }
+
+        // Toggle between login and add website forms
+        document.getElementById('toggleAddWebsite').addEventListener('click', () => {
+            const loginSection = document.getElementById('loginSection');
+            const addWebsiteSection = document.getElementById('addWebsiteSection');
+
+            if (addWebsiteSection.classList.contains('hidden')) {
+                loginSection.classList.add('hidden');
+                addWebsiteSection.classList.remove('hidden');
+                document.getElementById('toggleAddWebsite').textContent = 'Switch to Login';
+            } else {
+                loginSection.classList.remove('hidden');
+                addWebsiteSection.classList.add('hidden');
+                document.getElementById('toggleAddWebsite').textContent = 'Switch to Add Website';
+            }
+        });
 
         // Initialize leaderboard on page load
         updateLeaderboard();
     </script>
 </body>
-    </html>
-    
+</html>
